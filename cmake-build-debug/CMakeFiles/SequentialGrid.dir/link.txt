@@ -1,0 +1,1 @@
+/usr/bin/clang++  -fsanitize=thread -fopenmp -g -O1 -g CMakeFiles/SequentialGrid.dir/boids_sequential_grid.cpp.o -o SequentialGrid  -Wl,-rpath,/usr/lib/llvm-18/lib /usr/lib/llvm-18/lib/libomp.so /lib/x86_64-linux-gnu/libpthread.a 
