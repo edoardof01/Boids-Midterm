@@ -2,7 +2,7 @@
 #include "BoidsUpdateSOA.hpp"
 #include <iostream>
 #include <chrono>
-#include <random>
+#include <cmath>
 #include <cstdlib>
 #include <omp.h>
 
@@ -24,46 +24,52 @@ int main(const int argc, char* argv[]) {
 
     BoidSoA oldState(numBoids), newState(numBoids);
 
-    // Inizializzazione parallela
-    #pragma omp parallel default(none) shared(oldState, numBoids)
-    {
-        std::random_device rd;
-        std::mt19937 gen(rd() ^ omp_get_thread_num());
-        std::uniform_real_distribution<float> distX(0.0f, WIDTH);
-        std::uniform_real_distribution<float> distY(0.0f, HEIGHT);
-        std::uniform_real_distribution<float> distVel(-1.0f, 1.0f);
+    // Inizializzazione deterministica su griglia regolare
+    const int gridSize = static_cast<int>(std::ceil(std::sqrt(numBoids)));
+    const float spacingX = WIDTH / static_cast<float>(gridSize);
+    const float spacingY = HEIGHT / static_cast<float>(gridSize);
+    constexpr float centerX = WIDTH / 2.0f;
+    constexpr float centerY = HEIGHT / 2.0f;
 
-        #pragma omp for
-        for (int i = 0; i < numBoids; ++i) {
-            oldState.posX[i] = distX(gen);
-            oldState.posY[i] = distY(gen);
+    #pragma omp parallel for default(none) shared(oldState, numBoids, gridSize, spacingX, spacingY, centerX, centerY) schedule(static)
+    for (int i = 0; i < numBoids; ++i) {
+        const int row = i / gridSize;
+        const int col = i % gridSize;
+        const float posX = static_cast<float>(col) * spacingX + spacingX / 2.0f;
+        const float posY = static_cast<float>(row) * spacingY + spacingY / 2.0f;
 
-            Vector2 v{ distVel(gen), distVel(gen) };
-            v = v.normalized() * MAX_SPEED;
+        oldState.posX[i] = posX;
+        oldState.posY[i] = posY;
 
-            oldState.velX[i] = v.x;
-            oldState.velY[i] = v.y;
-        }
+        const float angle = std::atan2(posY - centerY, posX - centerX);
+        oldState.velX[i] = std::cos(angle) * MAX_SPEED;
+        oldState.velY[i] = std::sin(angle) * MAX_SPEED;
+    }
+
+    // First-touch: inizializza anche newState
+    #pragma omp parallel for default(none) shared(newState, numBoids) schedule(static)
+    for (int i = 0; i < numBoids; ++i) {
+        newState.posX[i] = 0.0f;
+        newState.posY[i] = 0.0f;
+        newState.velX[i] = 0.0f;
+        newState.velY[i] = 0.0f;
     }
 
     const auto start = std::chrono::high_resolution_clock::now();
 
-    // Tutta la simulazione dentro una singola parallel region
     #pragma omp parallel default(none) shared(oldState, newState, numBoids) nowait
     {
         constexpr int STEPS = 600;
         for (int step = 0; step < STEPS; ++step) {
-            #pragma omp for
+            #pragma omp for schedule(static)
             for (int i = 0; i < numBoids; ++i) {
                 computeNextBoidSoA(i, oldState, newState, numBoids);
             }
 
-            // Solo un thread fa lo swap
             #pragma omp single
             {
                 oldState.swap(newState);
             }
-            // Barriera implicita alla fine del ciclo `single` per sincronizzare tutti i thread
         }
     }
 

@@ -2,6 +2,8 @@
 #include "BoidsCommon.hpp"
 #include <iostream>
 #include <chrono>
+#include <vector>
+#include <cmath>
 #include <random>
 #include <cstdlib>
 #include <omp.h>
@@ -26,50 +28,64 @@ int main(const int argc, char* argv[]) {
 
     std::vector<Boid> oldState(numBoids), newState(numBoids);
 
-    // Inizializzazione parallela
-    #pragma omp parallel default(none) shared(oldState, numBoids)
-    {
-        std::random_device rd;
-        std::mt19937 gen(rd() ^ omp_get_thread_num());
-        std::uniform_real_distribution<float> distX(0.0f, WIDTH);
-        std::uniform_real_distribution<float> distY(0.0f, HEIGHT);
-        std::uniform_real_distribution<float> distVel(-1.0f, 1.0f);
+    // --- Inizializzazione su griglia regolare con direzioni radiali ---
+    const int gridSize = static_cast<int>(std::ceil(std::sqrt(numBoids)));
+    const float spacingX = WIDTH / static_cast<float>(gridSize);
+    const float spacingY = HEIGHT / static_cast<float>(gridSize);
+    constexpr float centerX = WIDTH / 2.0f;
+    constexpr float centerY = HEIGHT / 2.0f;
 
-        #pragma omp for
-        for (int i = 0; i < numBoids; ++i) {
-            oldState[i].position = Vector2(distX(gen), distY(gen));
-            Vector2 v(distVel(gen), distVel(gen));
-            v = v.normalized() * MAX_SPEED;
-            oldState[i].velocity = v;
-        }
+    // Parallelizza la posizione iniziale (e first-touch di oldState)
+    #pragma omp parallel for default(none) shared(oldState, numBoids, gridSize, spacingX, spacingY, centerX, centerY) schedule(static)
+    for (int i = 0; i < numBoids; ++i) {
+        const int row = i / gridSize;
+        const int col = i % gridSize;
+        const float posX = static_cast<float>(col) * spacingX + spacingX / 2.0f;
+        const float posY = static_cast<float>(row) * spacingY + spacingY / 2.0f;
+
+        oldState[i].position = { posX, posY };
+
+        const float angle = std::atan2(posY - centerY, posX - centerX);
+        oldState[i].velocity = { std::cos(angle) * MAX_SPEED, std::sin(angle) * MAX_SPEED };
     }
 
+    // --- First-touch per newState ---
+    #pragma omp parallel for default(none) shared(newState, numBoids) schedule(static)
+    for (int i = 0; i < numBoids; ++i) {
+        newState[i] = Boid{};
+    }
+
+    // Griglia
     UniformGrid grid(WIDTH, HEIGHT, cellSize);
+
     const auto start = std::chrono::high_resolution_clock::now();
 
-    // Tutta la simulazione dentro una singola parallel region
+    // --- Simulazione ---
     #pragma omp parallel default(none) shared(oldState, newState, grid, cellSize, numBoids) nowait
     {
         constexpr int STEPS = 600;
         for (int step = 0; step < STEPS; ++step) {
-            // Costruzione della griglia: eseguita da un solo thread
+            // Costruzione griglia
             #pragma omp single
             {
                 buildGrid(oldState, grid, cellSize);
             }
-            // Computazione parallela dei nuovi stati dei boid
+
+            #pragma omp barrier
+
+            // Calcolo del nuovo stato
             #pragma omp for schedule(static)
             for (int i = 0; i < numBoids; ++i) {
                 computeNextBoidGrid(i, oldState, newState, grid, cellSize);
             }
 
-            // Swap tra buffer vecchio e nuovo: eseguito da un solo thread
+            // Swap tra old e new
             #pragma omp single
             {
                 oldState.swap(newState);
             }
 
-            // Barriera implicita dopo `single` → sincronizzazione per sicurezza
+            // Implicit barrier qui
         }
     }
 

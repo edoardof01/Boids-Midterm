@@ -194,6 +194,19 @@ SpeedUpCalculation/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/SpeedUpCalculation.dir/build.make CMakeFiles/SpeedUpCalculation.dir/build
 .PHONY : SpeedUpCalculation/fast
 
+#=============================================================================
+# Target rules for targets named SpeedUpCalculation_threads
+
+# Build rule for target.
+SpeedUpCalculation_threads: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 SpeedUpCalculation_threads
+.PHONY : SpeedUpCalculation_threads
+
+# fast build rule for target.
+SpeedUpCalculation_threads/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/SpeedUpCalculation_threads.dir/build.make CMakeFiles/SpeedUpCalculation_threads.dir/build
+.PHONY : SpeedUpCalculation_threads/fast
+
 SpeedUpCalculation.o: SpeedUpCalculation.cpp.o
 .PHONY : SpeedUpCalculation.o
 
@@ -217,6 +230,33 @@ SpeedUpCalculation.s: SpeedUpCalculation.cpp.s
 SpeedUpCalculation.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/SpeedUpCalculation.dir/build.make CMakeFiles/SpeedUpCalculation.dir/SpeedUpCalculation.cpp.s
 .PHONY : SpeedUpCalculation.cpp.s
+
+SpeedUpCalculation_threads.o: SpeedUpCalculation_threads.cpp.o
+.PHONY : SpeedUpCalculation_threads.o
+
+# target to build an object file
+SpeedUpCalculation_threads.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/ParallelGrid.dir/build.make CMakeFiles/ParallelGrid.dir/SpeedUpCalculation_threads.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/SpeedUpCalculation_threads.dir/build.make CMakeFiles/SpeedUpCalculation_threads.dir/SpeedUpCalculation_threads.cpp.o
+.PHONY : SpeedUpCalculation_threads.cpp.o
+
+SpeedUpCalculation_threads.i: SpeedUpCalculation_threads.cpp.i
+.PHONY : SpeedUpCalculation_threads.i
+
+# target to preprocess a source file
+SpeedUpCalculation_threads.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/ParallelGrid.dir/build.make CMakeFiles/ParallelGrid.dir/SpeedUpCalculation_threads.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/SpeedUpCalculation_threads.dir/build.make CMakeFiles/SpeedUpCalculation_threads.dir/SpeedUpCalculation_threads.cpp.i
+.PHONY : SpeedUpCalculation_threads.cpp.i
+
+SpeedUpCalculation_threads.s: SpeedUpCalculation_threads.cpp.s
+.PHONY : SpeedUpCalculation_threads.s
+
+# target to generate assembly for a file
+SpeedUpCalculation_threads.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/ParallelGrid.dir/build.make CMakeFiles/ParallelGrid.dir/SpeedUpCalculation_threads.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/SpeedUpCalculation_threads.dir/build.make CMakeFiles/SpeedUpCalculation_threads.dir/SpeedUpCalculation_threads.cpp.s
+.PHONY : SpeedUpCalculation_threads.cpp.s
 
 boids_parallel.o: boids_parallel.cpp.o
 .PHONY : boids_parallel.o
@@ -352,9 +392,13 @@ help:
 	@echo "... SeqHeadless"
 	@echo "... SequentialGrid"
 	@echo "... SpeedUpCalculation"
+	@echo "... SpeedUpCalculation_threads"
 	@echo "... SpeedUpCalculation.o"
 	@echo "... SpeedUpCalculation.i"
 	@echo "... SpeedUpCalculation.s"
+	@echo "... SpeedUpCalculation_threads.o"
+	@echo "... SpeedUpCalculation_threads.i"
+	@echo "... SpeedUpCalculation_threads.s"
 	@echo "... boids_parallel.o"
 	@echo "... boids_parallel.i"
 	@echo "... boids_parallel.s"

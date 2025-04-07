@@ -6,5 +6,5 @@ CXX_DEFINES =
 
 CXX_INCLUDES = 
 
-CXX_FLAGS =  -fsanitize=thread -fopenmp -g -O1 -g -std=gnu++20 -fcolor-diagnostics -fopenmp=libomp
+CXX_FLAGS = -g -std=gnu++20 -fcolor-diagnostics -fopenmp=libomp
 

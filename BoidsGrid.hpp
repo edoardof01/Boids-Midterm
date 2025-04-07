@@ -29,6 +29,19 @@ struct UniformGrid {
     }
 };
 
+inline std::pair<int, int> getCellCoords(const Vector2& pos, const float cellSize, const int maxX, const int maxY) {
+    int cellX = static_cast<int>(std::floor(pos.x / cellSize));
+    int cellY = static_cast<int>(std::floor(pos.y / cellSize));
+
+    // Clamp per restare nei limiti validi della griglia
+    if (cellX < 0) cellX = 0;
+    if (cellX >= maxX) cellX = maxX - 1;
+    if (cellY < 0) cellY = 0;
+    if (cellY >= maxY) cellY = maxY - 1;
+
+    return {cellX, cellY};
+}
+
 /**
  * Inserisce i boid in "grid", in base alla loro posizione.
  * oldState[i] va nella cella (cellX, cellY).
@@ -43,17 +56,7 @@ inline void buildGrid(const std::vector<Boid>& oldState,
         const float x = oldState[i].position.x;
         const float y = oldState[i].position.y;
 
-        // Calcolo cella
-        int cellX = static_cast<int>(std::floor(x / cellSize));
-        int cellY = static_cast<int>(std::floor(y / cellSize));
-
-        // Attenzione al wrap-around se i boid escono dai bordi
-        // (facoltativo: se li rimetti in [0, WIDTH], [0, HEIGHT] altrove
-        //  potrebbe non servire)
-        if (cellX < 0)         cellX = 0;
-        if (cellX >= grid.cellCountX) cellX = grid.cellCountX - 1;
-        if (cellY < 0)         cellY = 0;
-        if (cellY >= grid.cellCountY) cellY = grid.cellCountY - 1;
+        auto [cellX, cellY] = getCellCoords(oldState[i].position, cellSize, grid.cellCountX, grid.cellCountY);
 
         // Aggiunge l'indice boid "i" in quella cella
         grid.cells[cellX][cellY].push_back(i);
@@ -196,15 +199,7 @@ inline void computeNextBoidGrid(const int i,
 {
     const Boid& b = oldState[i];
 
-    // Calcolo la cella in cui si trova boid i
-    int cellX = static_cast<int>(std::floor(b.position.x / cellSize));
-    int cellY = static_cast<int>(std::floor(b.position.y / cellSize));
-
-    // Controllo bounds
-    if (cellX < 0) cellX = 0;
-    if (cellX >= grid.cellCountX) cellX = grid.cellCountX - 1;
-    if (cellY < 0) cellY = 0;
-    if (cellY >= grid.cellCountY) cellY = grid.cellCountY - 1;
+    auto [cellX, cellY] = getCellCoords(b.position, cellSize, grid.cellCountX, grid.cellCountY);
 
     // Calcolo forze (usando le versioni "Grid"!)
     const Vector2 sep = separationGrid(b, i, oldState, grid, cellX, cellY) * SEPARATION_WEIGHT;

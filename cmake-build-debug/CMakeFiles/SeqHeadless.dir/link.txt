@@ -1,1 +1,1 @@
-/usr/bin/clang++  -fsanitize=thread -fopenmp -g -O1 -g CMakeFiles/SeqHeadless.dir/boids_sequential.cpp.o -o SeqHeadless  -Wl,-rpath,/usr/lib/llvm-18/lib /usr/lib/llvm-18/lib/libomp.so /lib/x86_64-linux-gnu/libpthread.a 
+/usr/bin/clang++ -g CMakeFiles/SeqHeadless.dir/boids_sequential.cpp.o -o SeqHeadless  -Wl,-rpath,/usr/lib/llvm-18/lib /usr/lib/llvm-18/lib/libomp.so /lib/x86_64-linux-gnu/libpthread.a 

@@ -2,10 +2,11 @@
 #include "BoidsUpdate.hpp"
 #include <iostream>
 #include <vector>
-#include <random>
+#include <cmath>
 #include <chrono>
 #include <cstdlib>
 #include <omp.h>
+
 
 int main(const int argc, char* argv[]) {
     // --- Parsing argomento da linea di comando ---
@@ -23,64 +24,64 @@ int main(const int argc, char* argv[]) {
         return 1;
     }
 
-    // --- Creazione stato dei boids ---
+    // --- Allocazione stati ---
     std::vector<Boid> oldState(numBoids);
     std::vector<Boid> newState(numBoids);
 
-
-
-
-
-    // Usare OpenMP per parallelizzare l'inizializzazione
-    #pragma omp parallel default(none) shared(oldState, numBoids)
-    {
-        std::random_device rd;
-        // Ogni thread ha il proprio generatore casuale
-        std::mt19937 gen(rd() ^ omp_get_thread_num());
-        std::uniform_real_distribution distX(0.0f, WIDTH);
-        std::uniform_real_distribution distY(0.0f, HEIGHT);
-        std::uniform_real_distribution distVel(-1.0f, 1.0f);
-
-        // Inizializzazione dei boids
-        #pragma omp for schedule(static)
-        for (int i = 0; i < numBoids; ++i) {
-            oldState[i].position = { distX(gen), distY(gen) };
-            Vector2 v{ distVel(gen), distVel(gen) };
-            v = v.normalized() * MAX_SPEED;
-            oldState[i].velocity = v;
-        }
+    // First-touch: inizializza newState in parallelo per mappare bene la memoria
+    #pragma omp parallel for default(none) shared(oldState, newState, numBoids) schedule(static)
+    for (int i = 0; i < numBoids; ++i) {
+        oldState[i] = Boid{};  // scrittura = first-touch
+        newState[i] = Boid{};  // scrittura = first-touch
     }
 
-    // Inizio conteggio del tempo
+
+    // --- Inizializzazione griglia regolare ---
+    const int gridSize = static_cast<int>(std::ceil(std::sqrt(numBoids)));
+    const float spacingX = WIDTH / static_cast<float>(gridSize);
+    const float spacingY = HEIGHT / static_cast<float>(gridSize);
+    constexpr float centerX = WIDTH / 2.0f;
+    constexpr float centerY = HEIGHT / 2.0f;
+
+    // Parallelizzata: ogni boid viene posizionato su una griglia e riceve velocità radiale
+    #pragma omp parallel for default(none) shared(oldState, numBoids, gridSize, spacingX, spacingY, centerX, centerY) schedule(static)
+    for (int i = 0; i < numBoids; ++i) {
+        const int row = i / gridSize;
+        const int col = i % gridSize;
+        const float posX = static_cast<float>(col) * spacingX + spacingX / 2.0f;
+        const float posY = static_cast<float>(row) * spacingY + spacingY / 2.0f;
+
+        oldState[i].position = { posX, posY };
+
+        const float angle = std::atan2(posY - centerY, posX - centerX);
+        oldState[i].velocity = { std::cos(angle) * MAX_SPEED, std::sin(angle) * MAX_SPEED };
+    }
+
+    // --- Simulazione ---
     const auto start = std::chrono::high_resolution_clock::now();
 
-    // Numero di passi per la simulazione
-    constexpr int STEPS = 600;
-
-    // Simulazione della dinamica dei boids
-    for (int step = 0; step < STEPS; ++step) {
-    #pragma omp parallel default(none) shared(numBoids, oldState, newState) nowait
-        {
+    // Regione parallela globale
+    #pragma omp parallel default(none) shared(oldState, newState, numBoids) nowait
+    {
+        constexpr int STEPS = 600;
+        for (int step = 0; step < STEPS; ++step) {
+            // Calcolo parallelo del nuovo stato
             #pragma omp for schedule(static)
             for (int i = 0; i < numBoids; ++i) {
                 computeNextBoid(i, oldState, newState);
             }
+
+            // Swap sequenziale tra i due buffer
             #pragma omp single
             {
-                oldState.swap(newState); // fa uno scambio degli array contenitori.
-                                            //oldState punta al nuovo stato e newState diventa vuoto
+                oldState.swap(newState);
             }
         }
     }
 
-
-
-    // Fine conteggio del tempo
     const auto end = std::chrono::high_resolution_clock::now();
     const double elapsed = std::chrono::duration<double>(end - start).count();
 
-    // Output del tempo di esecuzione
     std::cout << "TIME=" << elapsed << " seconds" << std::endl;
-
     return 0;
 }

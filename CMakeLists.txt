@@ -3,7 +3,7 @@ project(midtermParallel)
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsanitize=thread -fopenmp -g -O1")
+#[[set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsanitize=thread -fopenmp -g -O1")]]
 
 # Trova OpenMP
 find_package(OpenMP REQUIRED)
@@ -58,6 +58,7 @@ add_executable(ParallelGrid
         boids_parallel_grid.cpp
         BoidsGrid.hpp
         BoidsCommon.hpp
+        SpeedUpCalculation_threads.cpp
 )
 target_include_directories(ParallelGrid PRIVATE ${CMAKE_SOURCE_DIR})
 if(OpenMP_CXX_FOUND)
@@ -72,4 +73,13 @@ add_executable(SpeedUpCalculation
         SpeedUpCalculation.cpp
 )
 target_link_libraries(SpeedUpCalculation PRIVATE OpenMP::OpenMP_CXX)
+
+# ---------------------------------------------------------------------------
+# 7) Speedup Calculation threads
+# ---------------------------------------------------------------------------
+
+add_executable(SpeedUpCalculation_threads
+        SpeedUpCalculation_threads.cpp
+)
+target_link_libraries(SpeedUpCalculation_threads PRIVATE OpenMP::OpenMP_CXX)
 
