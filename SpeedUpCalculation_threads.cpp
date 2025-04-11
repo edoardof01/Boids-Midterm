@@ -21,8 +21,8 @@ double measureExecutionTime(const std::string& command, const std::string& env =
 }
 
 int main() {
-    constexpr int numBoids = 1200;
-    constexpr int TRIALS = 3;
+    constexpr int numBoids = 1600;
+    constexpr int TRIALS = 5;
 
     std::vector<int> threadCounts;
     std::cout << "Inserisci i valori di thread da testare, max 32 (termina con 0): ";
