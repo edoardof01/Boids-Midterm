@@ -5,5 +5,6 @@
 /home/edoar/midtermParallel/cmake-build-debug/CMakeFiles/ParallelGrid.dir
 /home/edoar/midtermParallel/cmake-build-debug/CMakeFiles/SpeedUpCalculation.dir
 /home/edoar/midtermParallel/cmake-build-debug/CMakeFiles/SpeedUpCalculation_threads.dir
+/home/edoar/midtermParallel/cmake-build-debug/CMakeFiles/run_vtune.dir
 /home/edoar/midtermParallel/cmake-build-debug/CMakeFiles/edit_cache.dir
 /home/edoar/midtermParallel/cmake-build-debug/CMakeFiles/rebuild_cache.dir

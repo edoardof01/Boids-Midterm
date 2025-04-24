@@ -1,3 +1,4 @@
+//boids_parallel_grid.cpp
 #include "BoidsGrid.hpp"
 #include "BoidsCommon.hpp"
 #include <iostream>
@@ -7,6 +8,55 @@
 #include <random>
 #include <cstdlib>
 #include <omp.h>
+
+// Versione parallela di buildGrid su griglia piatta (ottimizzata)
+void parallelBuildGrid(const std::vector<Boid>& oldState,
+                        UniformGrid& grid,
+                        const float cellSize)
+{
+    const int N = static_cast<int>(oldState.size());
+    const int numCells = grid.cellCountX * grid.cellCountY;
+
+    // Svuota solo le celle usate
+    #pragma omp parallel for default(none) shared(grid) schedule(static)
+    for (int i = 0; i < static_cast<int>(grid.usedCells.size()); ++i) {
+        grid.cells[grid.usedCells[i]].clear();
+    }
+    grid.usedCells.clear();
+
+    // Prepara storage per ogni thread
+    const int maxThreads = omp_get_max_threads();
+    std::vector threadLocalCells(maxThreads, std::vector<std::vector<int>>(numCells));
+
+    // Inserisce boid nelle celle in parallelo (senza lock)
+    #pragma omp parallel default(none) shared(oldState, grid, threadLocalCells, cellSize, numCells, N)
+    {
+        const int threadId = omp_get_thread_num();
+        auto& localCells = threadLocalCells[threadId];
+
+        #pragma omp for schedule(static)
+        for (int i = 0; i < N; ++i) {
+            auto [cellX, cellY] = getCellCoords(oldState[i].position,
+                cellSize, grid.cellCountX, grid.cellCountY);
+            const int cellIndex = grid.getCellIndex(cellX, cellY);
+            localCells[cellIndex].push_back(i);
+        }
+    }
+
+    // Merge delle celle in parallelo + tracciamento usedCells
+    #pragma omp parallel for default(none) shared(grid, threadLocalCells, numCells) schedule(static)
+    for (int i = 0; i < numCells; ++i) {
+        for (const auto& local : threadLocalCells) {
+            if (!local[i].empty()) {
+                grid.cells[i].insert(grid.cells[i].end(), local[i].begin(), local[i].end());
+            }
+        }
+        if (!grid.cells[i].empty()) {
+            #pragma omp critical
+            grid.usedCells.push_back(i);
+        }
+    }
+}
 
 int main(const int argc, char* argv[]) {
     int numBoids = 0;
@@ -28,15 +78,13 @@ int main(const int argc, char* argv[]) {
 
     std::vector<Boid> oldState(numBoids), newState(numBoids);
 
-    // --- Inizializzazione su griglia regolare con direzioni radiali ---
     const int gridSize = static_cast<int>(std::ceil(std::sqrt(numBoids)));
     const float spacingX = WIDTH / static_cast<float>(gridSize);
     const float spacingY = HEIGHT / static_cast<float>(gridSize);
     constexpr float centerX = WIDTH / 2.0f;
     constexpr float centerY = HEIGHT / 2.0f;
 
-    // Parallelizza la posizione iniziale (e first-touch di oldState)
-    #pragma omp parallel for default(none) shared(oldState, numBoids, gridSize, spacingX, spacingY, centerX, centerY) schedule(static)
+    #pragma omp parallel for default(none) shared(oldState, numBoids, gridSize, spacingX, spacingY) firstprivate(centerX, centerY) schedule(static)
     for (int i = 0; i < numBoids; ++i) {
         const int row = i / gridSize;
         const int col = i % gridSize;
@@ -49,43 +97,36 @@ int main(const int argc, char* argv[]) {
         oldState[i].velocity = { std::cos(angle) * MAX_SPEED, std::sin(angle) * MAX_SPEED };
     }
 
-    // --- First-touch per newState ---
     #pragma omp parallel for default(none) shared(newState, numBoids) schedule(static)
     for (int i = 0; i < numBoids; ++i) {
         newState[i] = Boid{};
     }
 
-    // Griglia
     UniformGrid grid(WIDTH, HEIGHT, cellSize);
+    for (auto& cell : grid.cells) cell.reserve(64);  // Prealloca spazio medio
 
     const auto start = std::chrono::high_resolution_clock::now();
 
-    // --- Simulazione ---
-    #pragma omp parallel default(none) shared(oldState, newState, grid, cellSize, numBoids) nowait
+    #pragma omp parallel default(none) shared(oldState, newState, grid, cellSize, numBoids)
     {
         constexpr int STEPS = 600;
         for (int step = 0; step < STEPS; ++step) {
-            // Costruzione griglia
             #pragma omp single
             {
-                buildGrid(oldState, grid, cellSize);
+                parallelBuildGrid(oldState, grid, cellSize);
             }
 
             #pragma omp barrier
 
-            // Calcolo del nuovo stato
             #pragma omp for schedule(static)
             for (int i = 0; i < numBoids; ++i) {
                 computeNextBoidGrid(i, oldState, newState, grid, cellSize);
             }
 
-            // Swap tra old e new
             #pragma omp single
             {
                 oldState.swap(newState);
             }
-
-            // Implicit barrier qui
         }
     }
 
@@ -95,3 +136,6 @@ int main(const int argc, char* argv[]) {
     std::cout << "TIME=" << elapsed << " seconds" << std::endl;
     return 0;
 }
+
+
+

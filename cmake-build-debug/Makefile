@@ -207,6 +207,19 @@ SpeedUpCalculation_threads/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/SpeedUpCalculation_threads.dir/build.make CMakeFiles/SpeedUpCalculation_threads.dir/build
 .PHONY : SpeedUpCalculation_threads/fast
 
+#=============================================================================
+# Target rules for targets named run_vtune
+
+# Build rule for target.
+run_vtune: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 run_vtune
+.PHONY : run_vtune
+
+# fast build rule for target.
+run_vtune/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/run_vtune.dir/build.make CMakeFiles/run_vtune.dir/build
+.PHONY : run_vtune/fast
+
 SpeedUpCalculation.o: SpeedUpCalculation.cpp.o
 .PHONY : SpeedUpCalculation.o
 
@@ -236,7 +249,6 @@ SpeedUpCalculation_threads.o: SpeedUpCalculation_threads.cpp.o
 
 # target to build an object file
 SpeedUpCalculation_threads.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/ParallelGrid.dir/build.make CMakeFiles/ParallelGrid.dir/SpeedUpCalculation_threads.cpp.o
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/SpeedUpCalculation_threads.dir/build.make CMakeFiles/SpeedUpCalculation_threads.dir/SpeedUpCalculation_threads.cpp.o
 .PHONY : SpeedUpCalculation_threads.cpp.o
 
@@ -245,7 +257,6 @@ SpeedUpCalculation_threads.i: SpeedUpCalculation_threads.cpp.i
 
 # target to preprocess a source file
 SpeedUpCalculation_threads.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/ParallelGrid.dir/build.make CMakeFiles/ParallelGrid.dir/SpeedUpCalculation_threads.cpp.i
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/SpeedUpCalculation_threads.dir/build.make CMakeFiles/SpeedUpCalculation_threads.dir/SpeedUpCalculation_threads.cpp.i
 .PHONY : SpeedUpCalculation_threads.cpp.i
 
@@ -254,7 +265,6 @@ SpeedUpCalculation_threads.s: SpeedUpCalculation_threads.cpp.s
 
 # target to generate assembly for a file
 SpeedUpCalculation_threads.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/ParallelGrid.dir/build.make CMakeFiles/ParallelGrid.dir/SpeedUpCalculation_threads.cpp.s
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/SpeedUpCalculation_threads.dir/build.make CMakeFiles/SpeedUpCalculation_threads.dir/SpeedUpCalculation_threads.cpp.s
 .PHONY : SpeedUpCalculation_threads.cpp.s
 
@@ -386,6 +396,7 @@ help:
 	@echo "... depend"
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
+	@echo "... run_vtune"
 	@echo "... ParHeadless"
 	@echo "... ParSOAHeadless"
 	@echo "... ParallelGrid"

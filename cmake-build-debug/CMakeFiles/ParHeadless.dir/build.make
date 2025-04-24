@@ -73,15 +73,15 @@ CMakeFiles/ParHeadless.dir/boids_parallel.cpp.o: CMakeFiles/ParHeadless.dir/flag
 CMakeFiles/ParHeadless.dir/boids_parallel.cpp.o: /home/edoar/midtermParallel/boids_parallel.cpp
 CMakeFiles/ParHeadless.dir/boids_parallel.cpp.o: CMakeFiles/ParHeadless.dir/compiler_depend.ts
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/edoar/midtermParallel/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/ParHeadless.dir/boids_parallel.cpp.o"
-	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/ParHeadless.dir/boids_parallel.cpp.o -MF CMakeFiles/ParHeadless.dir/boids_parallel.cpp.o.d -o CMakeFiles/ParHeadless.dir/boids_parallel.cpp.o -c /home/edoar/midtermParallel/boids_parallel.cpp
+	/usr/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/ParHeadless.dir/boids_parallel.cpp.o -MF CMakeFiles/ParHeadless.dir/boids_parallel.cpp.o.d -o CMakeFiles/ParHeadless.dir/boids_parallel.cpp.o -c /home/edoar/midtermParallel/boids_parallel.cpp
 
 CMakeFiles/ParHeadless.dir/boids_parallel.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/ParHeadless.dir/boids_parallel.cpp.i"
-	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/edoar/midtermParallel/boids_parallel.cpp > CMakeFiles/ParHeadless.dir/boids_parallel.cpp.i
+	/usr/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/edoar/midtermParallel/boids_parallel.cpp > CMakeFiles/ParHeadless.dir/boids_parallel.cpp.i
 
 CMakeFiles/ParHeadless.dir/boids_parallel.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/ParHeadless.dir/boids_parallel.cpp.s"
-	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/edoar/midtermParallel/boids_parallel.cpp -o CMakeFiles/ParHeadless.dir/boids_parallel.cpp.s
+	/usr/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/edoar/midtermParallel/boids_parallel.cpp -o CMakeFiles/ParHeadless.dir/boids_parallel.cpp.s
 
 # Object files for target ParHeadless
 ParHeadless_OBJECTS = \
@@ -92,8 +92,8 @@ ParHeadless_EXTERNAL_OBJECTS =
 
 ParHeadless: CMakeFiles/ParHeadless.dir/boids_parallel.cpp.o
 ParHeadless: CMakeFiles/ParHeadless.dir/build.make
-ParHeadless: /usr/lib/llvm-18/lib/libomp.so
-ParHeadless: /lib/x86_64-linux-gnu/libpthread.a
+ParHeadless: /usr/lib/gcc/x86_64-linux-gnu/13/libgomp.so
+ParHeadless: /usr/lib/x86_64-linux-gnu/libpthread.a
 ParHeadless: CMakeFiles/ParHeadless.dir/link.txt
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=/home/edoar/midtermParallel/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Linking CXX executable ParHeadless"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/ParHeadless.dir/link.txt --verbose=$(VERBOSE)

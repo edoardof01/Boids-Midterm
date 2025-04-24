@@ -1,106 +1,151 @@
+//BoidsUpdateSOA.hpp
 #pragma once
 #include "BoidsSOA.hpp"
+#include <omp.h>
 
-// Calcolo separazione
+// Calcolo separazione con SIMD e riduzioni esplicite
 inline Vector2 separation(const int i,
                           const BoidSoA& current,
                           const int numBoids)
 {
-    Vector2 steer{0, 0};
+    const float selfX = current.posX[i];
+    const float selfY = current.posY[i];
+    const float velX = current.velX[i];
+    const float velY = current.velY[i];
+
+    float steerX = 0.0f;
+    float steerY = 0.0f;
     int count = 0;
 
-    const Vector2 selfPos{current.posX[i], current.posY[i]};
-
+    #pragma omp simd reduction(+:steerX, steerY, count)
     for (int j = 0; j < numBoids; ++j) {
         if (i == j) continue;
 
-        const Vector2 otherPos{current.posX[j], current.posY[j]};
-        if (const float dist = (selfPos - otherPos).magnitude(); dist < SEPARATION_RADIUS) {
-            Vector2 diff = (selfPos - otherPos).normalized();
-            diff = diff / (dist * dist);
-            steer = steer + diff;
+        const float dx = selfX - current.posX[j];
+        const float dy = selfY - current.posY[j];
+
+        if (const float dist = std::sqrt(dx * dx + dy * dy); dist < SEPARATION_RADIUS && dist > 0.0001f) {
+            const float factor = 1.0f / (dist * dist);
+            steerX += dx / dist * factor;
+            steerY += (dy / dist) * factor;
             count++;
         }
     }
 
     if (count > 0) {
-        steer = steer / static_cast<float>(count);
-        steer = steer.normalized() * MAX_SPEED;
+        steerX /= static_cast<float>(count);
+        steerY /= static_cast<float>(count);
 
-        const Vector2 selfVel{current.velX[i], current.velY[i]};
-        steer = steer - selfVel;
-        steer.limit(MAX_FORCE);
+        if (const float mag = std::sqrt(steerX * steerX + steerY * steerY); mag > 0.0f) {
+            steerX = steerX / mag * MAX_SPEED - velX;
+            steerY = steerY / mag * MAX_SPEED - velY;
+
+            if (const float finalMag = std::sqrt(steerX * steerX + steerY * steerY); finalMag > MAX_FORCE) {
+                steerX = steerX / finalMag * MAX_FORCE;
+                steerY = steerY / finalMag * MAX_FORCE;
+            }
+        }
     }
 
-    return steer;
+    return {steerX, steerY};
 }
 
-// Calcolo allineamento
+// Calcolo allineamento con SIMD e riduzioni
 inline Vector2 alignment(const int i,
                          const BoidSoA& current,
                          const int numBoids)
 {
-    Vector2 sum{0, 0};
+    const float selfX = current.posX[i];
+    const float selfY = current.posY[i];
+    const float velX = current.velX[i];
+    const float velY = current.velY[i];
+
+    float sumX = 0.0f;
+    float sumY = 0.0f;
     int count = 0;
 
-    const Vector2 selfPos{current.posX[i], current.posY[i]};
-
+    #pragma omp simd reduction(+:sumX, sumY, count)
     for (int j = 0; j < numBoids; ++j) {
         if (i == j) continue;
 
-        const Vector2 otherPos{current.posX[j], current.posY[j]};
+        const float dx = selfX - current.posX[j];
+        const float dy = selfY - current.posY[j];
 
-        if (const float dist = (selfPos - otherPos).magnitude(); dist < VIEW_RADIUS) {
+        if (const float dist = std::sqrt(dx * dx + dy * dy); dist < VIEW_RADIUS) {
             const float weight = (VIEW_RADIUS - dist) / VIEW_RADIUS;
-            Vector2 otherVel{current.velX[j], current.velY[j]};
-            sum = sum + (otherVel * weight);
+            sumX += current.velX[j] * weight;
+            sumY += current.velY[j] * weight;
             count++;
         }
     }
 
     if (count > 0) {
-        sum = sum / static_cast<float>(count);
-        sum = sum.normalized() * MAX_SPEED;
+        sumX /= static_cast<float>(count);
+        sumY /= static_cast<float>(count);
 
-        const Vector2 selfVel{current.velX[i], current.velY[i]};
-        Vector2 steer = sum - selfVel;
-        steer.limit(MAX_FORCE);
-        return steer;
+        if (const float mag = std::sqrt(sumX * sumX + sumY * sumY); mag > 0.0f) {
+            sumX = sumX / mag * MAX_SPEED - velX;
+            sumY = sumY / mag * MAX_SPEED - velY;
+
+            if (const float finalMag = std::sqrt(sumX * sumX + sumY * sumY); finalMag > MAX_FORCE) {
+                sumX = sumX / finalMag * MAX_FORCE;
+                sumY = sumY / finalMag * MAX_FORCE;
+            }
+        }
+        return {sumX, sumY};
     }
 
-    return Vector2{0, 0};
+    return {0.0f, 0.0f};
 }
 
-// Calcolo coesione
+// Calcolo coesione con SIMD e riduzioni
 inline Vector2 cohesion(const int i,
                         const BoidSoA& current,
                         const int numBoids)
 {
-    Vector2 center{0, 0};
+    const float selfX = current.posX[i];
+    const float selfY = current.posY[i];
+    const float velX = current.velX[i];
+    const float velY = current.velY[i];
+
+    float centerX = 0.0f;
+    float centerY = 0.0f;
     int count = 0;
 
-    const Vector2 selfPos{current.posX[i], current.posY[i]};
-
+    #pragma omp simd reduction(+:centerX, centerY, count)
     for (int j = 0; j < numBoids; ++j) {
         if (i == j) continue;
 
-        const Vector2 otherPos{current.posX[j], current.posY[j]};
-        if (const float dist = (selfPos - otherPos).magnitude(); dist < VIEW_RADIUS) {
-            center = center + otherPos;
+        const float dx = selfX - current.posX[j];
+        const float dy = selfY - current.posY[j];
+
+        if (const float dist = std::sqrt(dx * dx + dy * dy); dist < VIEW_RADIUS) {
+            centerX += current.posX[j];
+            centerY += current.posY[j];
             count++;
         }
     }
 
     if (count > 0) {
-        center = center / static_cast<float>(count);
-        const Vector2 desired = (center - selfPos).normalized() * MAX_SPEED;
-        const Vector2 selfVel{current.velX[i], current.velY[i]};
-        Vector2 steer = desired - selfVel;
-        steer.limit(MAX_FORCE);
-        return steer;
+        centerX /= static_cast<float>(count);
+        centerY /= static_cast<float>(count);
+
+        float desiredX = centerX - selfX;
+        float desiredY = centerY - selfY;
+
+        if (const float mag = std::sqrt(desiredX * desiredX + desiredY * desiredY); mag > 0.0f) {
+            desiredX = desiredX / mag * MAX_SPEED - velX;
+            desiredY = desiredY / mag * MAX_SPEED - velY;
+
+            if (const float finalMag = std::sqrt(desiredX * desiredX + desiredY * desiredY); finalMag > MAX_FORCE) {
+                desiredX = desiredX / finalMag * MAX_FORCE;
+                desiredY = desiredY / finalMag * MAX_FORCE;
+            }
+        }
+        return {desiredX, desiredY};
     }
 
-    return Vector2{0, 0};
+    return {0.0f, 0.0f};
 }
 
 // Funzione principale per aggiornare un boid

@@ -1,3 +1,4 @@
+//SpeedUpCalculation_threads.cpp
 #include <iostream>
 #include <sstream>
 #include <string>
@@ -94,14 +95,16 @@ int main() {
     // Generazione automatica del grafico con gnuplot
     if (threadCounts.size() >= 3) {
         // Assicurati che la cartella esista (in genere già esiste in cmake)
-        std::system("mkdir -p cmake-build-debug");
+        if (int mkdirResult = std::system("mkdir -p cmake-build-debug"); mkdirResult != 0) {
+            std::cerr << "Errore nella creazione della cartella cmake-build-debug\n";
+        }
 
         const std::string gnuplotCommand =
             "gnuplot plot_speedup_threads.gp";
 
         std::cout << "\nGenero il grafico con Gnuplot...\n";
         if (int ret = std::system(gnuplotCommand.c_str()); ret != 0) {
-            std::cerr << " Errore nell'esecuzione di gnuplot (assicurati che sia installato e nella PATH)\n";
+            (void)std::system("xdg-open cmake-build-debug/speedup_threads_plot.png > /dev/null 2>&1 &");
         } else {
             std::system("xdg-open cmake-build-debug/speedup_threads_plot.png > /dev/null 2>&1 &");
         }

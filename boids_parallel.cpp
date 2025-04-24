@@ -1,3 +1,4 @@
+//Boids_parallel.cpp
 #include "BoidsCommon.hpp"
 #include "BoidsUpdate.hpp"
 #include <iostream>
@@ -43,8 +44,8 @@ int main(const int argc, char* argv[]) {
     constexpr float centerX = WIDTH / 2.0f;
     constexpr float centerY = HEIGHT / 2.0f;
 
-    // Parallelizzata: ogni boid viene posizionato su una griglia e riceve velocità radiale
-    #pragma omp parallel for default(none) shared(oldState, numBoids, gridSize, spacingX, spacingY, centerX, centerY) schedule(static)
+    //  ogni boid viene posizionato sulla griglia e riceve velocità radiale
+    #pragma omp parallel for schedule(static)
     for (int i = 0; i < numBoids; ++i) {
         const int row = i / gridSize;
         const int col = i % gridSize;
@@ -54,14 +55,15 @@ int main(const int argc, char* argv[]) {
         oldState[i].position = { posX, posY };
 
         const float angle = std::atan2(posY - centerY, posX - centerX);
-        oldState[i].velocity = { std::cos(angle) * MAX_SPEED, std::sin(angle) * MAX_SPEED };
+        oldState[i].velocity = { std::cos(angle) * MAX_SPEED,
+            std::sin(angle) * MAX_SPEED };
     }
 
     // --- Simulazione ---
     const auto start = std::chrono::high_resolution_clock::now();
 
     // Regione parallela globale
-    #pragma omp parallel default(none) shared(oldState, newState, numBoids) nowait
+    #pragma omp parallel default(none) shared(oldState, newState, numBoids)
     {
         constexpr int STEPS = 600;
         for (int step = 0; step < STEPS; ++step) {

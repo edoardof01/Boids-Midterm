@@ -4,8 +4,8 @@
 #include <cmath>
 #include <random>
 
-constexpr float WIDTH = 800.0f;
-constexpr float HEIGHT = 600.0f;
+constexpr float WIDTH = 1000.0f;
+constexpr float HEIGHT = 800.0f;
 constexpr float MAX_SPEED = 3.0f;
 constexpr float MAX_FORCE = 0.1f;
 constexpr float VIEW_RADIUS = 100.0f;
@@ -43,4 +43,5 @@ struct Boid {
     Vector2 position;
     Vector2 velocity;
 };
+
 

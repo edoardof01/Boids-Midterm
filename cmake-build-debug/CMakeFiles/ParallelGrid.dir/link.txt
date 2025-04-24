@@ -1,1 +1,1 @@
-/usr/bin/clang++ -g CMakeFiles/ParallelGrid.dir/boids_parallel_grid.cpp.o CMakeFiles/ParallelGrid.dir/SpeedUpCalculation_threads.cpp.o -o ParallelGrid  -Wl,-rpath,/usr/lib/llvm-18/lib /usr/lib/llvm-18/lib/libomp.so /lib/x86_64-linux-gnu/libpthread.a 
+/usr/bin/g++ -g CMakeFiles/ParallelGrid.dir/boids_parallel_grid.cpp.o -o ParallelGrid  /usr/lib/gcc/x86_64-linux-gnu/13/libgomp.so /usr/lib/x86_64-linux-gnu/libpthread.a 

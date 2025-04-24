@@ -1,3 +1,4 @@
+//SpeedUpCalculation.cpp
 #include <iostream>
 #include <sstream>
 #include <string>
@@ -5,6 +6,8 @@
 #include <cstdlib>
 #include <fstream>
 #include <vector>
+#include <cmath>
+#include <algorithm>
 
 // Misura il tempo di esecuzione di un comando esterno
 double measureExecutionTime(const std::string &command) {
@@ -19,6 +22,38 @@ double measureExecutionTime(const std::string &command) {
     }
     return std::chrono::duration<double>(end - start).count();
 }
+
+double meanWithoutOutliers(const std::vector<double>& values, const double m = 2.0) {
+    if (values.empty()) return 0.0;
+
+    double sum = 0.0;
+    double sq_sum = 0.0;
+    for (const double v : values) {
+        sum += v;
+        sq_sum += v * v;
+    }
+
+    const double mean = sum / static_cast<double>(values.size());
+    const double stddev = std::sqrt(sq_sum / (static_cast<double>(values.size()) - mean * mean));
+
+    std::vector<double> filtered;
+    for (double v : values) {
+        if (std::abs(v - mean) < m * stddev) {
+            filtered.push_back(v);
+        }
+    }
+
+    if (filtered.empty()) return mean; // fallback
+
+    double total = 0.0;
+    for (const double v : filtered) total += v;
+    return total / static_cast<double>(filtered.size());
+}
+
+
+
+
+
 
 int main() {
     std::vector<int> boidCounts;
@@ -44,12 +79,11 @@ int main() {
     }
 
     for (int numBoids : boidCounts) {
-        constexpr int TRIALS = 2;
+        constexpr int TRIALS = 1;
         std::cout << "\n=== Test con " << numBoids << " boid ===\n";
 
         std::string seqCmd     = "./SeqHeadless "     + std::to_string(numBoids);
         std::string parCmd     = "./ParHeadless "     + std::to_string(numBoids);
-        std::string seqGridCmd = "./SequentialGrid "  + std::to_string(numBoids);
         std::string parGridCmd = "./ParallelGrid "    + std::to_string(numBoids);
         std::string parSoACmd  = "./ParSOAHeadless "  + std::to_string(numBoids);
 
@@ -63,25 +97,18 @@ int main() {
         double parAvgNoGrid = parTotalNoGrid / TRIALS;
         std::cout << "[NoGrid] Tempo medio par: " << parAvgNoGrid << " s\n";
 
-        if (double speedupNoGrid = (parAvgNoGrid > 0.0) ? (seqAvgNoGrid / parAvgNoGrid) : -1.0; speedupNoGrid > 0.0) {
+        if (double speedupNoGrid = parAvgNoGrid > 0.0 ? seqAvgNoGrid / parAvgNoGrid : -1.0; speedupNoGrid > 0.0) {
             std::cout << " Speedup (NoGrid) = " << speedupNoGrid << "\n";
             outNoGrid << numBoids << " " << speedupNoGrid << "\n";
         } else {
             std::cerr << " Errore: parAvgNoGrid = 0.0?\n";
         }
-
-        /*double seqTotalGrid = 0.0;
-        for (int i = 0; i < TRIALS; ++i) seqTotalGrid += measureExecutionTime(seqGridCmd);
-        double seqAvgGrid = seqTotalGrid / TRIALS;
-        std::cout << "[Grid]   Tempo medio seq: " << seqAvgGrid << " s\n";*/
-
-
         double parTotalGrid = 0.0;
         for (int i = 0; i < TRIALS; ++i) parTotalGrid += measureExecutionTime(parGridCmd);
         double parAvgGrid = parTotalGrid / TRIALS;
         std::cout << "[Grid]   Tempo medio par: " << parAvgGrid << " s\n";
 
-        if (double speedupGrid = (parAvgGrid > 0.0) ? (seqAvgNoGrid / parAvgGrid) : -1.0; speedupGrid > 0.0) { // Prima era seqAvgGrid
+        if (double speedupGrid = parAvgGrid > 0.0 ? seqAvgNoGrid / parAvgGrid : -1.0; speedupGrid > 0.0) { // Prima era seqAvgGrid
             std::cout << " Speedup (Grid) = " << speedupGrid << "\n";
             outGrid << numBoids << " " << speedupGrid << "\n";
         } else {
@@ -93,7 +120,7 @@ int main() {
         double parAvgSoA = parTotalSoA / TRIALS;
         std::cout << "[SoA]    Tempo medio par: " << parAvgSoA << " s\n";
 
-        if (double speedupSoA = (parAvgSoA > 0.0) ? (seqAvgNoGrid / parAvgSoA) : -1.0; speedupSoA > 0.0) {
+        if (double speedupSoA = parAvgSoA > 0.0 ? seqAvgNoGrid / parAvgSoA : -1.0; speedupSoA > 0.0) {
             std::cout << " Speedup (SoA) = " << speedupSoA << "\n";
             outSoA << numBoids << " " << speedupSoA << "\n";
         } else {
@@ -117,3 +144,10 @@ int main() {
 
     return 0;
 }
+
+
+
+
+
+
+

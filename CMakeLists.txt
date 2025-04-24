@@ -3,7 +3,7 @@ project(midtermParallel)
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
-#[[set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsanitize=thread -fopenmp -g -O1")]]
+
 
 # Trova OpenMP
 find_package(OpenMP REQUIRED)
@@ -58,7 +58,6 @@ add_executable(ParallelGrid
         boids_parallel_grid.cpp
         BoidsGrid.hpp
         BoidsCommon.hpp
-        SpeedUpCalculation_threads.cpp
 )
 target_include_directories(ParallelGrid PRIVATE ${CMAKE_SOURCE_DIR})
 if(OpenMP_CXX_FOUND)
@@ -81,5 +80,25 @@ target_link_libraries(SpeedUpCalculation PRIVATE OpenMP::OpenMP_CXX)
 add_executable(SpeedUpCalculation_threads
         SpeedUpCalculation_threads.cpp
 )
+
 target_link_libraries(SpeedUpCalculation_threads PRIVATE OpenMP::OpenMP_CXX)
+
+# Flags utili per VTune
+foreach(target SeqHeadless ParHeadless ParSOAHeadless SequentialGrid ParallelGrid SpeedUpCalculation SpeedUpCalculation_threads)
+    target_compile_options(${target} PRIVATE -g -fno-omit-frame-pointer -fopenmp)
+endforeach()
+
+# Target custom per avviare VTune e generare report automatico
+add_custom_target(run_vtune
+        COMMAND ${CMAKE_COMMAND} -E remove_directory vtune_hotspots
+        COMMAND env OMP_DYNAMIC=FALSE OMP_PLACES=cores OMP_PROC_BIND=close vtune -collect hotspots -result-dir vtune_hotspots -- ./SpeedUpCalculation
+        COMMAND vtune -report hotspots -result-dir vtune_hotspots -format text -report-output vtune_hotspots/functions.txt
+        DEPENDS SpeedUpCalculation
+        WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
+        COMMENT "Profiling con VTune e OMP_* settings + report dettagliato"
+)
+
+
+
+
 

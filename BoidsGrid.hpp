@@ -11,21 +11,24 @@ struct UniformGrid {
     int cellCountX;
     int cellCountY;
 
-    std::vector<std::vector<std::vector<int>>> cells;
+    std::vector<std::vector<int>> cells;
+    std::vector<int> usedCells; // <-- AGGIUNTO per clear selettivo
 
     UniformGrid(const float width, const float height, const float cellSize) {
-        cellCountX = static_cast<int>(std::ceil(width  / cellSize));
+        cellCountX = static_cast<int>(std::ceil(width / cellSize));
         cellCountY = static_cast<int>(std::ceil(height / cellSize));
-        cells.resize(cellCountX, std::vector<std::vector<int>>(cellCountY));
+        cells.resize(cellCountX * cellCountY);
     }
 
-    // Svuota tutte le celle per ripopolare
     void clear() {
-        for (int x = 0; x < cellCountX; x++) {
-            for (int y = 0; y < cellCountY; y++) {
-                cells[x][y].clear();
-            }
+        for (const int idx : usedCells) {
+            cells[idx].clear();
         }
+        usedCells.clear();
+    }
+
+    [[nodiscard]] int getCellIndex(const int cellX, const int cellY) const {
+        return cellY * cellCountX + cellX; // numero di cella contandole dall'inizio alla fine
     }
 };
 
@@ -33,7 +36,6 @@ inline std::pair<int, int> getCellCoords(const Vector2& pos, const float cellSiz
     int cellX = static_cast<int>(std::floor(pos.x / cellSize));
     int cellY = static_cast<int>(std::floor(pos.y / cellSize));
 
-    // Clamp per restare nei limiti validi della griglia
     if (cellX < 0) cellX = 0;
     if (cellX >= maxX) cellX = maxX - 1;
     if (cellY < 0) cellY = 0;
@@ -42,33 +44,21 @@ inline std::pair<int, int> getCellCoords(const Vector2& pos, const float cellSiz
     return {cellX, cellY};
 }
 
-/**
- * Inserisce i boid in "grid", in base alla loro posizione.
- * oldState[i] va nella cella (cellX, cellY).
- */
 inline void buildGrid(const std::vector<Boid>& oldState,
                       UniformGrid& grid,
                       const float cellSize)
 {
     grid.clear();
 
-    for (int i = 0; i < static_cast<int>(oldState.size()); i++) {
-        const float x = oldState[i].position.x;
-        const float y = oldState[i].position.y;
-
-        auto [cellX, cellY] = getCellCoords(oldState[i].position, cellSize, grid.cellCountX, grid.cellCountY);
-
-        // Aggiunge l'indice boid "i" in quella cella
-        grid.cells[cellX][cellY].push_back(i);
+    for (int i = 0; i < static_cast<int>(oldState.size()); ++i) {
+        auto [cellX, cellY] = getCellCoords(oldState[i].position, cellSize,
+            grid.cellCountX, grid.cellCountY);
+        const int cellIndex = grid.getCellIndex(cellX, cellY);
+        grid.cells[cellIndex].push_back(i);
+        grid.usedCells.push_back(cellIndex);
     }
 }
 
-/**
- * Helpers per trovare i boid "vicini" in una UniformGrid.
- *
- * Data la cella (cellX, cellY), scorriamo se x e y intorno a +/-1
- * (finché restiamo entro i limiti).
- */
 inline void forEachNeighborBoid(
     const int cellX, const int cellY,
     const UniformGrid& grid,
@@ -82,8 +72,8 @@ inline void forEachNeighborBoid(
             if (nx < 0 || nx >= grid.cellCountX) continue;
             if (ny < 0 || ny >= grid.cellCountY) continue;
 
-            // Per tutti i boid nella cella [nx][ny], chiamiamo callback(...)
-            for (const int otherIdx : grid.cells[nx][ny]) {
+            for (const int neighborCellIndex = grid.getCellIndex(nx, ny);
+                const int otherIdx : grid.cells[neighborCellIndex]) {
                 callback(otherIdx);
             }
         }
@@ -95,6 +85,7 @@ inline void forEachNeighborBoid(
  * - sai in quale cella (cellX, cellY) si trova il boid 'b'
  * - scorri solo la cella e quelle adiacenti
  */
+
 inline Vector2 separationGrid(const Boid& b,
                               const int boidIndex,
                               const std::vector<Boid>& current,
@@ -107,7 +98,8 @@ inline Vector2 separationGrid(const Boid& b,
     forEachNeighborBoid(cellX, cellY, grid, [&](const int otherIdx){
         if (otherIdx == boidIndex) return;
         const auto&[position, velocity] = current[otherIdx];
-        if (const float dist = (b.position - position).magnitude(); dist < SEPARATION_RADIUS) {
+        if (const float dist = (b.position - position).magnitude();
+            dist < SEPARATION_RADIUS) {
             Vector2 diff = (b.position - position).normalized();
             diff = diff / (dist * dist);
             steer = steer + diff;
@@ -141,7 +133,7 @@ inline Vector2 alignmentGrid(const Boid& b,
         const auto&[position, velocity] = current[otherIdx];
         if (const float dist = (b.position - position).magnitude(); dist < VIEW_RADIUS) {
             const float weight = (VIEW_RADIUS - dist) / VIEW_RADIUS;
-            sum = sum + (velocity * weight);
+            sum = sum + velocity * weight;
             count++;
         }
     });
@@ -228,4 +220,8 @@ inline void computeNextBoidGrid(const int i,
     newState[i].position = newPosition;
     newState[i].velocity = newVelocity;
 }
+
+
+
+
 

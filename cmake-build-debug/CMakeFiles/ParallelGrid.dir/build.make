@@ -73,45 +73,29 @@ CMakeFiles/ParallelGrid.dir/boids_parallel_grid.cpp.o: CMakeFiles/ParallelGrid.d
 CMakeFiles/ParallelGrid.dir/boids_parallel_grid.cpp.o: /home/edoar/midtermParallel/boids_parallel_grid.cpp
 CMakeFiles/ParallelGrid.dir/boids_parallel_grid.cpp.o: CMakeFiles/ParallelGrid.dir/compiler_depend.ts
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/edoar/midtermParallel/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/ParallelGrid.dir/boids_parallel_grid.cpp.o"
-	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/ParallelGrid.dir/boids_parallel_grid.cpp.o -MF CMakeFiles/ParallelGrid.dir/boids_parallel_grid.cpp.o.d -o CMakeFiles/ParallelGrid.dir/boids_parallel_grid.cpp.o -c /home/edoar/midtermParallel/boids_parallel_grid.cpp
+	/usr/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/ParallelGrid.dir/boids_parallel_grid.cpp.o -MF CMakeFiles/ParallelGrid.dir/boids_parallel_grid.cpp.o.d -o CMakeFiles/ParallelGrid.dir/boids_parallel_grid.cpp.o -c /home/edoar/midtermParallel/boids_parallel_grid.cpp
 
 CMakeFiles/ParallelGrid.dir/boids_parallel_grid.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/ParallelGrid.dir/boids_parallel_grid.cpp.i"
-	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/edoar/midtermParallel/boids_parallel_grid.cpp > CMakeFiles/ParallelGrid.dir/boids_parallel_grid.cpp.i
+	/usr/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/edoar/midtermParallel/boids_parallel_grid.cpp > CMakeFiles/ParallelGrid.dir/boids_parallel_grid.cpp.i
 
 CMakeFiles/ParallelGrid.dir/boids_parallel_grid.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/ParallelGrid.dir/boids_parallel_grid.cpp.s"
-	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/edoar/midtermParallel/boids_parallel_grid.cpp -o CMakeFiles/ParallelGrid.dir/boids_parallel_grid.cpp.s
-
-CMakeFiles/ParallelGrid.dir/SpeedUpCalculation_threads.cpp.o: CMakeFiles/ParallelGrid.dir/flags.make
-CMakeFiles/ParallelGrid.dir/SpeedUpCalculation_threads.cpp.o: /home/edoar/midtermParallel/SpeedUpCalculation_threads.cpp
-CMakeFiles/ParallelGrid.dir/SpeedUpCalculation_threads.cpp.o: CMakeFiles/ParallelGrid.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/edoar/midtermParallel/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/ParallelGrid.dir/SpeedUpCalculation_threads.cpp.o"
-	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/ParallelGrid.dir/SpeedUpCalculation_threads.cpp.o -MF CMakeFiles/ParallelGrid.dir/SpeedUpCalculation_threads.cpp.o.d -o CMakeFiles/ParallelGrid.dir/SpeedUpCalculation_threads.cpp.o -c /home/edoar/midtermParallel/SpeedUpCalculation_threads.cpp
-
-CMakeFiles/ParallelGrid.dir/SpeedUpCalculation_threads.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/ParallelGrid.dir/SpeedUpCalculation_threads.cpp.i"
-	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/edoar/midtermParallel/SpeedUpCalculation_threads.cpp > CMakeFiles/ParallelGrid.dir/SpeedUpCalculation_threads.cpp.i
-
-CMakeFiles/ParallelGrid.dir/SpeedUpCalculation_threads.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/ParallelGrid.dir/SpeedUpCalculation_threads.cpp.s"
-	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/edoar/midtermParallel/SpeedUpCalculation_threads.cpp -o CMakeFiles/ParallelGrid.dir/SpeedUpCalculation_threads.cpp.s
+	/usr/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/edoar/midtermParallel/boids_parallel_grid.cpp -o CMakeFiles/ParallelGrid.dir/boids_parallel_grid.cpp.s
 
 # Object files for target ParallelGrid
 ParallelGrid_OBJECTS = \
-"CMakeFiles/ParallelGrid.dir/boids_parallel_grid.cpp.o" \
-"CMakeFiles/ParallelGrid.dir/SpeedUpCalculation_threads.cpp.o"
+"CMakeFiles/ParallelGrid.dir/boids_parallel_grid.cpp.o"
 
 # External object files for target ParallelGrid
 ParallelGrid_EXTERNAL_OBJECTS =
 
 ParallelGrid: CMakeFiles/ParallelGrid.dir/boids_parallel_grid.cpp.o
-ParallelGrid: CMakeFiles/ParallelGrid.dir/SpeedUpCalculation_threads.cpp.o
 ParallelGrid: CMakeFiles/ParallelGrid.dir/build.make
-ParallelGrid: /usr/lib/llvm-18/lib/libomp.so
-ParallelGrid: /lib/x86_64-linux-gnu/libpthread.a
+ParallelGrid: /usr/lib/gcc/x86_64-linux-gnu/13/libgomp.so
+ParallelGrid: /usr/lib/x86_64-linux-gnu/libpthread.a
 ParallelGrid: CMakeFiles/ParallelGrid.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=/home/edoar/midtermParallel/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Linking CXX executable ParallelGrid"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=/home/edoar/midtermParallel/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Linking CXX executable ParallelGrid"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/ParallelGrid.dir/link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.

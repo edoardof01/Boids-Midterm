@@ -1,3 +1,4 @@
+//BoidsUpdate.hpp
 #pragma once
 #include "BoidsCommon.hpp"
 
@@ -5,8 +6,10 @@
 inline Vector2 separation(const Boid& b, const std::vector<Boid>& current) {
     Vector2 steer{0, 0};
     int count = 0;
+
     for (const auto& other : current) {
-        if (const float dist = (b.position - other.position).magnitude(); &b != &other && dist < SEPARATION_RADIUS) {
+        if (const float dist = (b.position - other.position).magnitude();
+            &b != &other && dist < SEPARATION_RADIUS) {
             Vector2 diff = (b.position - other.position).normalized();
             diff = diff / (dist * dist);
             steer = steer + diff;
@@ -69,25 +72,23 @@ inline void computeNextBoid(const int i,
                             std::vector<Boid>& newState)
 {
     const Boid& b = oldState[i];
-    auto&[position, velocity] = newState[i];  // riferimento diretto al boid di destinazione
+    auto&[position, velocity] = newState[i];
 
-    // Calcolo delle forze di comportamento
     const Vector2 sep = separation(b, oldState) * SEPARATION_WEIGHT;
     const Vector2 ali = alignment(b, oldState)   * ALIGNMENT_WEIGHT;
     const Vector2 coh = cohesion(b, oldState)    * COHESION_WEIGHT;
 
     Vector2 acceleration = sep + ali + coh;
     acceleration.limit(MAX_FORCE);
-
     velocity = b.velocity + acceleration;
     velocity.limit(MAX_SPEED);
-
     position = b.position + velocity;
 
-    // Gestione dei bordi con wrapping
     constexpr float margin = 5.0f;
     if (position.x < -margin) position.x = WIDTH + margin;
     else if (position.x > WIDTH + margin) position.x = -margin;
     if (position.y < -margin) position.y = HEIGHT + margin;
     else if (position.y > HEIGHT + margin) position.y = -margin;
 }
+
+

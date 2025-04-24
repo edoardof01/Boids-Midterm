@@ -73,15 +73,15 @@ CMakeFiles/SpeedUpCalculation.dir/SpeedUpCalculation.cpp.o: CMakeFiles/SpeedUpCa
 CMakeFiles/SpeedUpCalculation.dir/SpeedUpCalculation.cpp.o: /home/edoar/midtermParallel/SpeedUpCalculation.cpp
 CMakeFiles/SpeedUpCalculation.dir/SpeedUpCalculation.cpp.o: CMakeFiles/SpeedUpCalculation.dir/compiler_depend.ts
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/edoar/midtermParallel/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/SpeedUpCalculation.dir/SpeedUpCalculation.cpp.o"
-	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/SpeedUpCalculation.dir/SpeedUpCalculation.cpp.o -MF CMakeFiles/SpeedUpCalculation.dir/SpeedUpCalculation.cpp.o.d -o CMakeFiles/SpeedUpCalculation.dir/SpeedUpCalculation.cpp.o -c /home/edoar/midtermParallel/SpeedUpCalculation.cpp
+	/usr/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/SpeedUpCalculation.dir/SpeedUpCalculation.cpp.o -MF CMakeFiles/SpeedUpCalculation.dir/SpeedUpCalculation.cpp.o.d -o CMakeFiles/SpeedUpCalculation.dir/SpeedUpCalculation.cpp.o -c /home/edoar/midtermParallel/SpeedUpCalculation.cpp
 
 CMakeFiles/SpeedUpCalculation.dir/SpeedUpCalculation.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/SpeedUpCalculation.dir/SpeedUpCalculation.cpp.i"
-	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/edoar/midtermParallel/SpeedUpCalculation.cpp > CMakeFiles/SpeedUpCalculation.dir/SpeedUpCalculation.cpp.i
+	/usr/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/edoar/midtermParallel/SpeedUpCalculation.cpp > CMakeFiles/SpeedUpCalculation.dir/SpeedUpCalculation.cpp.i
 
 CMakeFiles/SpeedUpCalculation.dir/SpeedUpCalculation.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/SpeedUpCalculation.dir/SpeedUpCalculation.cpp.s"
-	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/edoar/midtermParallel/SpeedUpCalculation.cpp -o CMakeFiles/SpeedUpCalculation.dir/SpeedUpCalculation.cpp.s
+	/usr/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/edoar/midtermParallel/SpeedUpCalculation.cpp -o CMakeFiles/SpeedUpCalculation.dir/SpeedUpCalculation.cpp.s
 
 # Object files for target SpeedUpCalculation
 SpeedUpCalculation_OBJECTS = \
@@ -92,8 +92,8 @@ SpeedUpCalculation_EXTERNAL_OBJECTS =
 
 SpeedUpCalculation: CMakeFiles/SpeedUpCalculation.dir/SpeedUpCalculation.cpp.o
 SpeedUpCalculation: CMakeFiles/SpeedUpCalculation.dir/build.make
-SpeedUpCalculation: /usr/lib/llvm-18/lib/libomp.so
-SpeedUpCalculation: /lib/x86_64-linux-gnu/libpthread.a
+SpeedUpCalculation: /usr/lib/gcc/x86_64-linux-gnu/13/libgomp.so
+SpeedUpCalculation: /usr/lib/x86_64-linux-gnu/libpthread.a
 SpeedUpCalculation: CMakeFiles/SpeedUpCalculation.dir/link.txt
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=/home/edoar/midtermParallel/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Linking CXX executable SpeedUpCalculation"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/SpeedUpCalculation.dir/link.txt --verbose=$(VERBOSE)

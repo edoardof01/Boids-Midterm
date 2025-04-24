@@ -1,1 +1,1 @@
-/usr/bin/clang++ -g CMakeFiles/SeqHeadless.dir/boids_sequential.cpp.o -o SeqHeadless  -Wl,-rpath,/usr/lib/llvm-18/lib /usr/lib/llvm-18/lib/libomp.so /lib/x86_64-linux-gnu/libpthread.a 
+/usr/bin/g++ -g CMakeFiles/SeqHeadless.dir/boids_sequential.cpp.o -o SeqHeadless  /usr/lib/gcc/x86_64-linux-gnu/13/libgomp.so /usr/lib/x86_64-linux-gnu/libpthread.a 

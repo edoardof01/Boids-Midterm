@@ -1,11 +1,11 @@
+//BoidsSOA.hpp
 #pragma once
-
 #include <vector>
 #include <cmath>
 #include <random>
 
-constexpr float WIDTH = 800.0f;
-constexpr float HEIGHT = 600.0f;
+constexpr float WIDTH = 1000.0f;
+constexpr float HEIGHT = 800.0f;
 constexpr float MAX_SPEED = 3.0f;
 constexpr float MAX_FORCE = 0.1f;
 constexpr float VIEW_RADIUS = 100.0f;
@@ -30,7 +30,7 @@ struct Vector2 {
 
     [[nodiscard]] Vector2 normalized() const {
         const float mag = magnitude();
-        return (mag > 0.0f) ? (*this / mag) : *this;
+        return mag > 0.0f ? *this / mag : *this;
     }
 
     void limit(const float max) {

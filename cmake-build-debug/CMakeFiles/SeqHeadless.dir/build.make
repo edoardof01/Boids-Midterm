@@ -73,15 +73,15 @@ CMakeFiles/SeqHeadless.dir/boids_sequential.cpp.o: CMakeFiles/SeqHeadless.dir/fl
 CMakeFiles/SeqHeadless.dir/boids_sequential.cpp.o: /home/edoar/midtermParallel/boids_sequential.cpp
 CMakeFiles/SeqHeadless.dir/boids_sequential.cpp.o: CMakeFiles/SeqHeadless.dir/compiler_depend.ts
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/edoar/midtermParallel/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/SeqHeadless.dir/boids_sequential.cpp.o"
-	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/SeqHeadless.dir/boids_sequential.cpp.o -MF CMakeFiles/SeqHeadless.dir/boids_sequential.cpp.o.d -o CMakeFiles/SeqHeadless.dir/boids_sequential.cpp.o -c /home/edoar/midtermParallel/boids_sequential.cpp
+	/usr/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/SeqHeadless.dir/boids_sequential.cpp.o -MF CMakeFiles/SeqHeadless.dir/boids_sequential.cpp.o.d -o CMakeFiles/SeqHeadless.dir/boids_sequential.cpp.o -c /home/edoar/midtermParallel/boids_sequential.cpp
 
 CMakeFiles/SeqHeadless.dir/boids_sequential.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/SeqHeadless.dir/boids_sequential.cpp.i"
-	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/edoar/midtermParallel/boids_sequential.cpp > CMakeFiles/SeqHeadless.dir/boids_sequential.cpp.i
+	/usr/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/edoar/midtermParallel/boids_sequential.cpp > CMakeFiles/SeqHeadless.dir/boids_sequential.cpp.i
 
 CMakeFiles/SeqHeadless.dir/boids_sequential.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/SeqHeadless.dir/boids_sequential.cpp.s"
-	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/edoar/midtermParallel/boids_sequential.cpp -o CMakeFiles/SeqHeadless.dir/boids_sequential.cpp.s
+	/usr/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/edoar/midtermParallel/boids_sequential.cpp -o CMakeFiles/SeqHeadless.dir/boids_sequential.cpp.s
 
 # Object files for target SeqHeadless
 SeqHeadless_OBJECTS = \
@@ -92,8 +92,8 @@ SeqHeadless_EXTERNAL_OBJECTS =
 
 SeqHeadless: CMakeFiles/SeqHeadless.dir/boids_sequential.cpp.o
 SeqHeadless: CMakeFiles/SeqHeadless.dir/build.make
-SeqHeadless: /usr/lib/llvm-18/lib/libomp.so
-SeqHeadless: /lib/x86_64-linux-gnu/libpthread.a
+SeqHeadless: /usr/lib/gcc/x86_64-linux-gnu/13/libgomp.so
+SeqHeadless: /usr/lib/x86_64-linux-gnu/libpthread.a
 SeqHeadless: CMakeFiles/SeqHeadless.dir/link.txt
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=/home/edoar/midtermParallel/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Linking CXX executable SeqHeadless"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/SeqHeadless.dir/link.txt --verbose=$(VERBOSE)

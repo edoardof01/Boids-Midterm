@@ -73,15 +73,15 @@ CMakeFiles/SequentialGrid.dir/boids_sequential_grid.cpp.o: CMakeFiles/Sequential
 CMakeFiles/SequentialGrid.dir/boids_sequential_grid.cpp.o: /home/edoar/midtermParallel/boids_sequential_grid.cpp
 CMakeFiles/SequentialGrid.dir/boids_sequential_grid.cpp.o: CMakeFiles/SequentialGrid.dir/compiler_depend.ts
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/edoar/midtermParallel/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/SequentialGrid.dir/boids_sequential_grid.cpp.o"
-	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/SequentialGrid.dir/boids_sequential_grid.cpp.o -MF CMakeFiles/SequentialGrid.dir/boids_sequential_grid.cpp.o.d -o CMakeFiles/SequentialGrid.dir/boids_sequential_grid.cpp.o -c /home/edoar/midtermParallel/boids_sequential_grid.cpp
+	/usr/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/SequentialGrid.dir/boids_sequential_grid.cpp.o -MF CMakeFiles/SequentialGrid.dir/boids_sequential_grid.cpp.o.d -o CMakeFiles/SequentialGrid.dir/boids_sequential_grid.cpp.o -c /home/edoar/midtermParallel/boids_sequential_grid.cpp
 
 CMakeFiles/SequentialGrid.dir/boids_sequential_grid.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/SequentialGrid.dir/boids_sequential_grid.cpp.i"
-	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/edoar/midtermParallel/boids_sequential_grid.cpp > CMakeFiles/SequentialGrid.dir/boids_sequential_grid.cpp.i
+	/usr/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/edoar/midtermParallel/boids_sequential_grid.cpp > CMakeFiles/SequentialGrid.dir/boids_sequential_grid.cpp.i
 
 CMakeFiles/SequentialGrid.dir/boids_sequential_grid.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/SequentialGrid.dir/boids_sequential_grid.cpp.s"
-	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/edoar/midtermParallel/boids_sequential_grid.cpp -o CMakeFiles/SequentialGrid.dir/boids_sequential_grid.cpp.s
+	/usr/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/edoar/midtermParallel/boids_sequential_grid.cpp -o CMakeFiles/SequentialGrid.dir/boids_sequential_grid.cpp.s
 
 # Object files for target SequentialGrid
 SequentialGrid_OBJECTS = \
@@ -92,8 +92,8 @@ SequentialGrid_EXTERNAL_OBJECTS =
 
 SequentialGrid: CMakeFiles/SequentialGrid.dir/boids_sequential_grid.cpp.o
 SequentialGrid: CMakeFiles/SequentialGrid.dir/build.make
-SequentialGrid: /usr/lib/llvm-18/lib/libomp.so
-SequentialGrid: /lib/x86_64-linux-gnu/libpthread.a
+SequentialGrid: /usr/lib/gcc/x86_64-linux-gnu/13/libgomp.so
+SequentialGrid: /usr/lib/x86_64-linux-gnu/libpthread.a
 SequentialGrid: CMakeFiles/SequentialGrid.dir/link.txt
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=/home/edoar/midtermParallel/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Linking CXX executable SequentialGrid"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/SequentialGrid.dir/link.txt --verbose=$(VERBOSE)

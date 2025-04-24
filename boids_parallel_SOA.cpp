@@ -1,3 +1,4 @@
+//boids_parallel_SOA.cpp
 #include "BoidsSOA.hpp"
 #include "BoidsUpdateSOA.hpp"
 #include <iostream>
@@ -31,7 +32,7 @@ int main(const int argc, char* argv[]) {
     constexpr float centerX = WIDTH / 2.0f;
     constexpr float centerY = HEIGHT / 2.0f;
 
-    #pragma omp parallel for default(none) shared(oldState, numBoids, gridSize, spacingX, spacingY, centerX, centerY) schedule(static)
+    #pragma omp parallel for schedule(static)
     for (int i = 0; i < numBoids; ++i) {
         const int row = i / gridSize;
         const int col = i % gridSize;
@@ -57,7 +58,7 @@ int main(const int argc, char* argv[]) {
 
     const auto start = std::chrono::high_resolution_clock::now();
 
-    #pragma omp parallel default(none) shared(oldState, newState, numBoids) nowait
+    #pragma omp parallel default(none) shared(oldState, newState, numBoids)
     {
         constexpr int STEPS = 600;
         for (int step = 0; step < STEPS; ++step) {

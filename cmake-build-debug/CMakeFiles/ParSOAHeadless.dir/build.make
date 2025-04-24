@@ -73,15 +73,15 @@ CMakeFiles/ParSOAHeadless.dir/boids_parallel_SOA.cpp.o: CMakeFiles/ParSOAHeadles
 CMakeFiles/ParSOAHeadless.dir/boids_parallel_SOA.cpp.o: /home/edoar/midtermParallel/boids_parallel_SOA.cpp
 CMakeFiles/ParSOAHeadless.dir/boids_parallel_SOA.cpp.o: CMakeFiles/ParSOAHeadless.dir/compiler_depend.ts
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/edoar/midtermParallel/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/ParSOAHeadless.dir/boids_parallel_SOA.cpp.o"
-	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/ParSOAHeadless.dir/boids_parallel_SOA.cpp.o -MF CMakeFiles/ParSOAHeadless.dir/boids_parallel_SOA.cpp.o.d -o CMakeFiles/ParSOAHeadless.dir/boids_parallel_SOA.cpp.o -c /home/edoar/midtermParallel/boids_parallel_SOA.cpp
+	/usr/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/ParSOAHeadless.dir/boids_parallel_SOA.cpp.o -MF CMakeFiles/ParSOAHeadless.dir/boids_parallel_SOA.cpp.o.d -o CMakeFiles/ParSOAHeadless.dir/boids_parallel_SOA.cpp.o -c /home/edoar/midtermParallel/boids_parallel_SOA.cpp
 
 CMakeFiles/ParSOAHeadless.dir/boids_parallel_SOA.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/ParSOAHeadless.dir/boids_parallel_SOA.cpp.i"
-	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/edoar/midtermParallel/boids_parallel_SOA.cpp > CMakeFiles/ParSOAHeadless.dir/boids_parallel_SOA.cpp.i
+	/usr/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/edoar/midtermParallel/boids_parallel_SOA.cpp > CMakeFiles/ParSOAHeadless.dir/boids_parallel_SOA.cpp.i
 
 CMakeFiles/ParSOAHeadless.dir/boids_parallel_SOA.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/ParSOAHeadless.dir/boids_parallel_SOA.cpp.s"
-	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/edoar/midtermParallel/boids_parallel_SOA.cpp -o CMakeFiles/ParSOAHeadless.dir/boids_parallel_SOA.cpp.s
+	/usr/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/edoar/midtermParallel/boids_parallel_SOA.cpp -o CMakeFiles/ParSOAHeadless.dir/boids_parallel_SOA.cpp.s
 
 # Object files for target ParSOAHeadless
 ParSOAHeadless_OBJECTS = \
@@ -92,8 +92,8 @@ ParSOAHeadless_EXTERNAL_OBJECTS =
 
 ParSOAHeadless: CMakeFiles/ParSOAHeadless.dir/boids_parallel_SOA.cpp.o
 ParSOAHeadless: CMakeFiles/ParSOAHeadless.dir/build.make
-ParSOAHeadless: /usr/lib/llvm-18/lib/libomp.so
-ParSOAHeadless: /lib/x86_64-linux-gnu/libpthread.a
+ParSOAHeadless: /usr/lib/gcc/x86_64-linux-gnu/13/libgomp.so
+ParSOAHeadless: /usr/lib/x86_64-linux-gnu/libpthread.a
 ParSOAHeadless: CMakeFiles/ParSOAHeadless.dir/link.txt
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=/home/edoar/midtermParallel/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Linking CXX executable ParSOAHeadless"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/ParSOAHeadless.dir/link.txt --verbose=$(VERBOSE)
